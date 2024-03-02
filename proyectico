@@ -1,0 +1,255 @@
+create database "proyecto"
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table AbismoAbisal(
+	
+	"Id" int primary key not null, --clave primaria
+	
+	FechaFin date
+)
+----------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+create table Aparece( 
+	
+	nombreEnemigo varchar(20) references Enemigo(Nombre), --nombreEnemigo es FK de Enemigo(Nombre)
+	
+	nombreRegion varchar(20) references Región(Nombre) --nombreRegion es Region(Nombre)
+	
+)
+------------------------------------------------------------------------------
+
+---------------------------------------------------------------
+create table Arma( 
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Rareza varchar(20), 
+	AtaqueBase int, 
+	tipo varchar(20), 
+	Longitud int, 
+	DobleFilo bool, 
+	Peso int, 
+	tipoPunta varchar(20),
+	materialCuerda varchar(20), 
+	tipoMagia varchar(20), 
+	segundoEfecto varchar(20), 
+	magnitudSegundoEfecto) int
+)
+-----------------------------------------------------------------
+
+------------------------------------------------------------------
+create table Comida( 
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Rareza varchar(20), 
+	
+	nombreRegión varchar(20) references Región(Nombre) --nombreRegión es FK de Region(Nombre)
+	
+)
+------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+create table Concede(
+	
+	NombreComida varchar(20), references Comida(Nombre) --NombreComida es FK de Comida(Nombre)
+	
+	idEfecto int references Efecto("Id")			--idEfecto es FK de Efecto(id)
+	
+)
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table ConjuntoArtefactos( 
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Descripcion varchar(2000), 
+	
+	efecto varchar(20) references Efecto("Id"), --Efecto es FK de Efecto(Nombre)
+	
+	magnitudEfecto int, 
+	
+	regionProveniencia varchar(20) references Región(Nombre) --regionProveniencia es FK de Region(Nombre)
+	
+)
+----------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table Conoce(
+	nombrePersonaje1 varchar(20) primary key not null references Personaje(nombre), 	
+														--clave primaria
+														--nombrePersonaje1 es FK de Personaje(Nombre)
+
+	nombrePersonaje2 varchar(20) primary key not null references Personaje(nombre), 
+														--clave primaria 
+														--nombrePersonaje2 es FK de Personaje(Nombre)
+
+	tipoRelacion varchar(20)
+)
+------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------
+create table Efecto(
+	
+	"Id" int primary key not null, --clave primaria
+	
+	Nombre varchar(20), 
+	Descripción varchar(2000)
+)
+-------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table Elemento(
+	
+	Nombre varchar(20) primary key not null --clave primaria
+	
+)
+---------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+create table Enemigo(
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Vida int, 
+	tipo varchar(20), 
+	tiempoAparición int, 
+	
+	elementoImbuimiento varchar(20) references Elemento(Nombre) --elementoImbuimiento es FK de Elemento(Nombre)
+
+)
+----------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------
+create table Habilidad( 
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Tipo varchar(20), 
+	BonoATQ int
+)
+--------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table Incluye(
+	
+	nombreEnemigo varchar(20) primary key not null references Enemigo(Nombre),
+													--clave primaria
+													--nombreEnemigo es FK de Enemigo(Nombre)
+
+	numeroSala int varchar(20) primary key not null references Sala(Numero), 	
+														--clave primaria
+														--numeroSala es FK de Sala(Numero)
+
+	idPiso int primary key not null references Piso("Id"), 	
+										--clave primaria
+										--idPiso es FK de Piso(id)
+
+	idAbismoAbisal int primary key not null references AbismoAbisal("Id")
+											--clave primaria
+											--idAbismoAbisal es FK de AbismoAbisal(Id)
+
+)
+---------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+create table Ingiere(
+	
+	nombrePersonaje varchar(20) references Personaje(nombre), --nombrePersonaje es FK de Personaje(Nombre)
+	
+	nombreComida varchar(20) references Comida(nombre)	--nombreComida es FK de Comida(Nombre)
+	
+)
+-------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------
+create table Personaje(
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Cargo varchar(20),
+	Vision varchar(20),
+	tipo varchar(20),
+	Constelación varchar(20), 
+	Rareza varchar(20),
+	TipoArma varchar(20), 
+	AtaqueBase int,
+	VelMovimiento int,
+	Defensa int,
+	Vida int,
+	regionProveniencia varchar(20),
+	nombreArma varchar(20),
+	efectoSecundario varchar(20),
+	magnitudEfectoSecundario int,
+	habilidadElemental varchar(20),
+	habilidadDefinitiva varchar(20),
+	conjuntoArtefactos varchar(20), 
+	
+	regionProveniencia varchar(20) references Región(Nombre), -- es FK de región(nombre)
+	
+	nombreArma varchar(20) references Arma(Nombre), -- es FK de arma(nombre)
+	
+	habilidadElemental varchar(20) references Habilidad(Nombre), --es FK de Habilidad(Nombre)
+	
+	habilidadDefinitiva varchar(20) references Habilidad(Nombre), --es FK de Habilidad(Nombre)
+	
+	conjuntoArtefactos varchar(20) references ConjuntoArtefactos(Nombre) --es FK de conjuntoArtefactos(Nombre)
+	
+)
+-------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table Piso(
+	"Id" int primary key not null, --clave primaria
+	
+	idAbismoAbisal int primary key not null references AbismoAbisal("Id"), 
+												--clave primaria
+												--idAbismoAbisal es FK de AbismoAbisal(Id)
+	
+	tipo varchar(20), 
+	promEstrellas int, 
+	
+	efectoDado varchar(20) references Efecto(Nombre), --efectoDado es FK de Efecto(Nombre)
+	
+	magnitudEfecto int
+)
+-------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------
+create table Región( 
+	
+	Nombre varchar(20) primary key not null, --clave primaria
+	
+	Arconte varchar(20), 
+	Descripción varchar(2000), 
+	
+	elementoOrigen varchar(20) references Elemento(Nombre) --elementoOrigen es FK de Elemento(Nombre)
+	
+)
+----------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------
+create table RegionesInspiradas( 
+	
+	NombreRegion varchar(20) primary key not null references Región(Nombre), 	
+													--clave primaria 
+													--NombreRegion es FK de Region(Nombre)
+	
+	NombrePaísReal varchar(20)
+)
+----------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------
+create table Sala(
+	Numero int, 
+	
+	idPiso int references Piso("Id"), --idPiso es FK de Piso(id)
+	
+	idAbismoAbisal int references AbismoAbisal("Id") --idAbismoAbisal es FK de AbismoAbisal(Id)
+)
+--------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------
